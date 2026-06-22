@@ -1,0 +1,8 @@
+{
+  "name": "Copy of Copy of Copy of Copy of Copy of Copy of PulseTalk AI",
+  "description": "A privacy-first AI healthcare assistant for symptom checking, image analysis, and appointment scheduling.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
