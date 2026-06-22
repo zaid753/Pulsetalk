@@ -128,29 +128,6 @@ npm run dev
 
 ---
 
-## 📸 Screenshots
-
-Add application screenshots here.
-
-```md
-![Dashboard](screenshots/dashboard.png)
-![Chat Assistant](screenshots/chat.png)
-![Analytics](screenshots/analytics.png)
-```
-
----
-
-## 🎯 Future Enhancements
-
-- Voice-enabled healthcare assistant
-- Telemedicine integration
-- Electronic Health Records (EHR)
-- AI-powered risk prediction
-- Prescription management
-- Healthcare recommendation engine
-
----
-
 ## 🤝 Contributing
 
 Contributions, feature requests, and suggestions are welcome.
