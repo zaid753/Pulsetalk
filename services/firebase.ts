@@ -15,11 +15,20 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 
-export let analytics: any;
-if (typeof window !== "undefined") {
+export let analytics: any = null;
+
+// Only initialize analytics if we are in a browser context and have a valid (non-placeholder) API key
+const isDummyKey = firebaseConfig.apiKey.includes("DummyKeyPlaceholder");
+if (typeof window !== "undefined" && !isDummyKey) {
   isSupported().then((supported) => {
     if (supported) {
-      analytics = getAnalytics(app);
+      try {
+        analytics = getAnalytics(app);
+      } catch (err) {
+        console.warn("Firebase Analytics failed to initialize:", err);
+      }
     }
+  }).catch((err) => {
+    console.warn("Firebase Analytics support check failed:", err);
   });
 }

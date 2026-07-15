@@ -83,12 +83,21 @@ const ParticleCanvas: React.FC<{ theme: 'light' | 'dark' }> = ({ theme }) => {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    let width = 0;
+    let height = 0;
+
     const resize = () => {
       const parent = canvas.parentElement;
       if (!parent) return;
-      canvas.width = parent.clientWidth;
-      canvas.height = parent.clientHeight;
-      initParticles(canvas.width, canvas.height);
+      width = parent.clientWidth;
+      height = parent.clientHeight;
+      const dpr = window.devicePixelRatio || 1;
+      
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+      
+      initParticles(width, height);
     };
     resize();
     window.addEventListener('resize', resize);
@@ -106,7 +115,7 @@ const ParticleCanvas: React.FC<{ theme: 'light' | 'dark' }> = ({ theme }) => {
 
     const animate = () => {
       if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.clearRect(0, 0, width, height);
 
       const particles = particlesRef.current;
       const mouse = mouseRef.current;
@@ -157,15 +166,15 @@ const ParticleCanvas: React.FC<{ theme: 'light' | 'dark' }> = ({ theme }) => {
         if (p.x < 0) {
           p.x = 0;
           p.vx = -p.vx * 0.9;
-        } else if (p.x > canvas.width) {
-          p.x = canvas.width;
+        } else if (p.x > width) {
+          p.x = width;
           p.vx = -p.vx * 0.9;
         }
         if (p.y < 0) {
           p.y = 0;
           p.vy = -p.vy * 0.9;
-        } else if (p.y > canvas.height) {
-          p.y = canvas.height;
+        } else if (p.y > height) {
+          p.y = height;
           p.vy = -p.vy * 0.9;
         }
 
