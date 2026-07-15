@@ -89,18 +89,34 @@ const ParticleCanvas: React.FC<{ theme: 'light' | 'dark' }> = ({ theme }) => {
     const resize = () => {
       const parent = canvas.parentElement;
       if (!parent) return;
-      width = parent.clientWidth;
-      height = parent.clientHeight;
+      
+      const rect = parent.getBoundingClientRect();
+      width = rect.width;
+      height = rect.height;
       const dpr = window.devicePixelRatio || 1;
       
+      // Explicitly set both intrinsic and CSS size to prevent any layout stretching
       canvas.width = width * dpr;
       canvas.height = height * dpr;
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      
       ctx.scale(dpr, dpr);
       
       initParticles(width, height);
     };
-    resize();
-    window.addEventListener('resize', resize);
+
+    // Use ResizeObserver to catch any size changes of the parent element
+    // This is more robust than window.resize, especially on page load where layout might shift.
+    const resizeObserver = new ResizeObserver(() => {
+      resize();
+    });
+    
+    if (canvas.parentElement) {
+      resizeObserver.observe(canvas.parentElement);
+    } else {
+      resize(); // fallback
+    }
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!canvasRef.current) return;
@@ -207,7 +223,7 @@ const ParticleCanvas: React.FC<{ theme: 'light' | 'dark' }> = ({ theme }) => {
     animate();
 
     return () => {
-      window.removeEventListener('resize', resize);
+      resizeObserver.disconnect();
       window.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseleave', handleMouseLeave);
       cancelAnimationFrame(animFrameRef.current);
